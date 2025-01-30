@@ -1,2 +1,3 @@
 ./anaconda_projects/*
-*/.ipynb_checkpoints/*
+anaconda_projects/db/project_filebrowser.db
+week1/jupiter-notebooks/.ipynb_checkpoints/jupter-1-checkpoint.ipynb

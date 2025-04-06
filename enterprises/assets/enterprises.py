@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 from dagster import asset
 
+from . import constants
 from .constants import ENTERPRISES_RAW_FILE_PATH
 
 def remove_alphabets(value: str) -> str:
@@ -47,7 +48,9 @@ def top_economic_countries(context) -> None:
     apdv_enterprises_collection = context.resources.mongo["enterprises"]
     enterprises = apdv_enterprises_collection.find()
     df = pd.DataFrame(enterprises)
+    fig, ax = plt.subplots(figsize =(10, 10))
     countries_all_enterprises = df[(df["year"] == 1998)].groupby(by="country").agg({'enterprises': 'sum'})
     sns.barplot(countries_all_enterprises.sort_values(by="enterprises", ascending=True).tail(10)[::-1], x="country",
                 y="enterprises").set_title("Number of enterprises in top european countries in 1998")
-    plt.show()
+    plt.savefig(constants.TOP_ECONOMIC_FILE_PATH, format="png", bbox_inches="tight")
+    plt.close(fig)

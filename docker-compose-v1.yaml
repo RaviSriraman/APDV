@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: dagster
+      POSTGRES_PASSWORD: dagster
+      POSTGRES_DB: dagster
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  code_location:
+    build: .
+    ports:
+      - "4000:4000"
+
+  dagster-webserver:
+    image: dagster/dagster-webserver:1.6.8
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./workspace.yaml:/workspace.yaml
+      - ./dagster.yaml:/dagster.yaml
+    environment:
+      DAGSTER_HOME: /dagster
+    depends_on:
+      - postgres
+      - code_location
+
+  dagster-daemon:
+    image: dagster/dagster-daemon:1.6.8
+    volumes:
+      - ./workspace.yaml:/workspace.yaml
+      - ./dagster.yaml:/dagster.yaml
+    environment:
+      DAGSTER_HOME: /dagster
+    depends_on:
+      - postgres
+      - code_location
+
+volumes:
+  postgres_data:

@@ -4,5 +4,5 @@ week1/jupiter-notebooks/.ipynb_checkpoints/jupter-1-checkpoint.ipynb
 .idea/*
 .load_from_mongo_output.ipynb/*
 .idea/APDV.iml
-
+/.venv/*
 

@@ -1,7 +1,8 @@
 import os
 
-from dagster import resource, EnvVar
+from dagster import resource
 from pymongo import MongoClient
+
 
 @resource
 def mongo_resource():

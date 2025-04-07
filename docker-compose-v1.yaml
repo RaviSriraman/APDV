@@ -19,8 +19,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./workspace.yaml:/workspace.yaml
-      - ./dagster.yaml:/dagster.yaml
+      - ./workspace-prod.yaml:/workspace-prod.yaml
+      - ./dagster-prod.yaml:/dagster-prod.yaml
     environment:
       DAGSTER_HOME: /dagster
     depends_on:
@@ -30,8 +30,8 @@ services:
   dagster-daemon:
     image: dagster/dagster-daemon:1.6.8
     volumes:
-      - ./workspace.yaml:/workspace.yaml
-      - ./dagster.yaml:/dagster.yaml
+      - ./workspace-prod.yaml:/workspace-prod.yaml
+      - ./dagster-prod.yaml:/dagster-prod.yaml
     environment:
       DAGSTER_HOME: /dagster
     depends_on:

@@ -1,26 +1,117 @@
-version: '3.8'
-
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mongo
-    environment:
-      - MONGO_DB_URI=mongodb://mongo:27018
-    volumes:
-      - data:/data/app
-
   mongo:
     image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_DATABASE: "APDV"
+    networks:
+      - dagster_network
     ports:
       - "27018:27017"
     volumes:
       - mongo-data:/data/db
 
+  postgres:
+    image: postgres:11
+    container_name: postgres_enterprises
+    environment:
+      POSTGRES_USER: "postgres_user"
+      POSTGRES_PASSWORD: "postgres_password"
+      POSTGRES_DB: "postgres_db"
+    networks:
+      - dagster_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres_user -d postgres_db"]
+      interval: 10s
+      timeout: 8s
+      retries: 5
+
+  enterprises:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: enterprises
+    image: enterprises_code_image
+    environment:
+      MONGO_DB_URI: "mongodb://mongo:27018"
+      DAGSTER_POSTGRES_USER: "postgres_user"
+      DAGSTER_POSTGRES_PASSWORD: "postgres_password"
+      DAGSTER_POSTGRES_DB: "postgres_db"
+      DAGSTER_CURRENT_IMAGE: "enterprises_code_image"
+    volumes:
+      - ${HOME_DIR}/data:/opt/dagster/app/data
+    restart: always
+    networks:
+      - dagster_network
+
+  dagster_webserver:
+    build:
+      args:
+        HOST_DIR: $PWD
+      context: .
+      dockerfile: ./Dockerfile_dagster
+    entrypoint:
+      - dagster-webserver
+      - -h
+      - "0.0.0.0"
+      - -p
+      - "3000"
+      - -w
+      - workspace.yaml
+    container_name: dagster_webserver
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    environment:
+      DAGSTER_POSTGRES_USER: "postgres_user"
+      DAGSTER_POSTGRES_PASSWORD: "postgres_password"
+      DAGSTER_POSTGRES_DB: "postgres_db"
+      MONGO_DB_URI: "mongodb://mongo:27018"
+    volumes: # Make docker client accessible so we can terminate containers from the webserver
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+      - ${HOME_DIR}/data:/opt/dagster/dagster_home/data
+    networks:
+      - dagster_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      enterprises:
+        condition: service_started
+
+
+  dagster_daemon:
+    build:
+      args:
+        HOST_DIR: $PWD
+      context: .
+      dockerfile: ./Dockerfile_dagster
+    entrypoint:
+      - dagster-daemon
+      - run
+    container_name: dagster_daemon
+    restart: on-failure
+    environment:
+      DAGSTER_POSTGRES_USER: "postgres_user"
+      DAGSTER_POSTGRES_PASSWORD: "postgres_password"
+      DAGSTER_POSTGRES_DB: "postgres_db"
+    volumes: # Make docker client accessible so we can launch containers using host docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+      - ${HOME_DIR}/data:/opt/dagster/dagster_home/data
+    networks:
+      - dagster_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      enterprises:
+        condition: service_started
+
+networks:
+  dagster_network:
+    driver: bridge
+    name: dagster_network
+
 volumes:
   mongo-data:
-  data:
-
-

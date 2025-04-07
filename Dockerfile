@@ -1,38 +1,19 @@
-FROM python:3.12
+FROM python:3.10-slim
 
-LABEL authors="ravisreeraman"
+WORKDIR /opt/dagster/app
 
-ADD https://astral.sh/uv/install.sh /uv-installer.sh
+COPY . /opt/dagster/app
 
-RUN sh /uv-installer.sh && rm /uv-installer.sh
+RUN pip install -r requirements.txt
 
-ENV PATH="/root/.local/bin:$PATH"
-ENV PATH="/opt/app/bin:$PATH"
-ENV DAGSTER_HOME=/opt/app
+# Run dagster gRPC server on port 4000
 
-RUN mkdir /opt/app
-RUN mkdir /opt/app/bin
+EXPOSE 4000
 
-COPY . /opt/app
-COPY bin/run.sh /opt/app/bin/
+RUN mv dagster-prod.yaml dagster.yaml
 
-WORKDIR /opt/app
+RUN mv workspace-prod.yaml workspace.yaml
 
-RUN rm run.sh
+#VOLUME /opt/dagster/app/data
 
-RUN pip3 install --upgrade setuptools pip wheel
-
-RUN pip3 install --extra-index-url https://pypi.fury.io/arrow-nightlies/ \
-        --prefer-binary --pre pyarrow
-
-RUN pip3 install dagster dagster-webserver pandas seaborn pymongo
-
-RUN uv sync
-
-EXPOSE 3000
-
-VOLUME data abc/
-
-RUN chmod +x /opt/app/bin/run.sh
-
-#CMD ["run.sh"]
+CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-m", "enterprises.definitions"]

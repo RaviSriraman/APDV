@@ -1,3 +1,4 @@
+import os
 import re
 from io import StringIO
 
@@ -6,11 +7,12 @@ import requests
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from dagster import asset
+from dagster import asset, AssetExecutionContext
 
 from . import constants
 from .constants import ENTERPRISES_RAW_FILE_PATH
 
+LOGGER_CONFIG = {"loggers": {"console": {"config": {"log_level": "INFO"}}}}
 
 def remove_alphabets(value: str) -> str:
     if isinstance(value, str):
@@ -48,7 +50,7 @@ def enterprises(context) -> None:
 
 
 @asset(deps=["enterprises"], required_resource_keys={"mongo"})
-def top_economic_countries(context) -> None:
+def top_economic_countries(context: AssetExecutionContext) -> None:
     apdv_enterprises_collection = context.resources.mongo["enterprises"]
     enterprises = apdv_enterprises_collection.find()
     df = pd.DataFrame(enterprises)

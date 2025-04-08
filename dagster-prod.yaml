@@ -26,6 +26,7 @@ run_launcher:
         - /var/run/docker.sock:/var/run/docker.sock
         - /tmp/io_manager_storage:/tmp/io_manager_storage
         - ${HOME_DIR}/data:/opt/dagster/app/data
+        - ${HOME_DIR}/notebooks:/opt/dagster/app/notebooks
 
 run_storage:
   module: dagster_postgres.run_storage

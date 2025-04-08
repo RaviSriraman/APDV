@@ -23,6 +23,8 @@ WORKDIR $DAGSTER_HOME
 
 RUN pip install -r requirements.txt
 
+RUN ipython kernel install --name anaconda3 --user
+
 COPY ./dagster-prod.yaml $DAGSTER_HOME/dagster.yaml
 
 COPY ./workspace-prod.yaml $DAGSTER_HOME/workspace.yaml

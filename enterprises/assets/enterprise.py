@@ -6,7 +6,6 @@ import pandas as pd
 import requests
 import seaborn as sns
 import matplotlib.pyplot as plt
-import plotly
 
 from dagster import asset, AssetExecutionContext
 

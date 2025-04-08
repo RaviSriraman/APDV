@@ -6,6 +6,8 @@ COPY . /opt/dagster/app
 
 RUN pip install -r requirements.txt
 
+RUN ipython kernel install --name anaconda3 --user
+
 # Run dagster gRPC server on port 4000
 
 EXPOSE 4000
@@ -13,6 +15,10 @@ EXPOSE 4000
 RUN mv dagster-prod.yaml dagster.yaml
 
 RUN mv workspace-prod.yaml workspace.yaml
+
+RUN rm .env
+
+RUN mv prod.env .env
 
 #VOLUME /opt/dagster/app/data
 

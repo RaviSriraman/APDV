@@ -13,7 +13,7 @@ df = pd.DataFrame(data)
 # Initialize the Dash app
 app = Dash(__name__)
 
-# Define the layout of the dashboard
+# Define the layout of the pages
 app.layout = html.Div(children=[
     html.H1(children='Multi-Chart Dashboard'),
 

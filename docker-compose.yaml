@@ -38,6 +38,8 @@ services:
       DAGSTER_POSTGRES_DB: "postgres_db"
       DAGSTER_CURRENT_IMAGE: "enterprises_code_image"
     restart: always
+    depends_on:
+      - enterprises
     expose:
       - 8070
     ports:

@@ -26,6 +26,25 @@ services:
       timeout: 8s
       retries: 5
 
+  dash_app:
+    build:
+      context: ./dash_app
+      dockerfile: Dockerfile
+    container_name: dash_app
+    environment:
+      MONGO_DB_URI: "mongodb://mongo:27017"
+      DAGSTER_POSTGRES_USER: "postgres_user"
+      DAGSTER_POSTGRES_PASSWORD: "postgres_password"
+      DAGSTER_POSTGRES_DB: "postgres_db"
+      DAGSTER_CURRENT_IMAGE: "enterprises_code_image"
+    restart: always
+    expose:
+      - 8070
+    ports:
+      - "8070:8070"
+    networks:
+      - dagster_network
+
   enterprises:
     build:
       context: .

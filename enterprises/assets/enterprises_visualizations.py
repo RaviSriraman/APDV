@@ -16,7 +16,7 @@ def enterprises_dataset():
         columns=sk_iris["feature_names"] + ["target"],
     )
 
-iris_kmeans_notebook = define_dagstermill_asset(
+enterprises_visualization_notebook = define_dagstermill_asset(
     name="enterprises_visualizations",
     notebook_path = file_relative_path(__file__, "../../notebooks/enterprises-visualizations.ipynb"),
     group_name="enterprises",

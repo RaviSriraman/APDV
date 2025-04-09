@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  dagster-code-server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: dagster-code-server
+    volumes:
+      - .:/app
+      - shared-data:/shared
+    ports:
+      - "4000:4000"
+
+  dagster-webserver:
+    build:
+      args:
+        HOST_DIR: $PWD
+      context: .
+      dockerfile: ./Dockerfile_dagster
+#    entrypoint:
+#      - dagster-webserver
+#      - -h
+#      - "0.0.0.0"
+#      - -p
+#      - "3000"
+#      - -w
+#      - workspace.yaml
+    expose:
+      - "3000"
+    container_name: dagster-webserver
+    volumes:
+      - .:/app
+      - shared-data:/shared
+    environment:
+      DAGSTER_HOME: /app
+    ports:
+      - "3000:3000"
+    command: ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000", "-w", "/app/workspace.yaml"]
+    depends_on:
+      - dagster-code-server
+
+  dagster-daemon:
+    build:
+      args:
+        HOST_DIR: $PWD
+      context: .
+      dockerfile: ./Dockerfile_dagster
+#    entrypoint:
+#      - dagster-daemon
+#      - run
+    container_name: dagster-daemon
+    volumes:
+      - .:/app
+      - shared-data:/shared
+    environment:
+      DAGSTER_HOME: /app
+    command: ["dagster-daemon", "run"]
+    depends_on:
+      - dagster-code-server
+
+  dash-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dash-app
+    command: ["python", "dash_app/app.py"]
+    ports:
+      - "8050:8050"
+    volumes:
+      - .:/app
+      - shared-data:/shared
+    depends_on:
+      - dagster-daemon
+
+volumes:
+  shared-data:

@@ -11,5 +11,5 @@ RUN mv prod.env .env
 
 EXPOSE 8070
 
-CMD ["python", "app.py"]
+CMD ["python", "src/app.py"]
 

@@ -18,3 +18,6 @@ def find_enterprises_by_city(city: str) -> list[Any]:
 
 def find_all() -> list[Any]:
     return enterprises_collection.find().to_list()
+
+def find_enterprises_by_year(year) -> list[Any]:
+    return enterprises_collection.find({"year": year}).to_list()

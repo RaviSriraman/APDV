@@ -1,5 +1,5 @@
 load_from:
   - grpc_server:
-      host: enterprises
+      host: workflow
       port: 4000
-      location_name: "enterprises"
+      location_name: "workflow"

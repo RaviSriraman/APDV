@@ -21,8 +21,8 @@ dev-dependencies = [
 ]
 
 [tool.dagster]
-module_name = "enterprises.definitions"
-code_location_name = "enterprises"
+module_name = "workflow.definitions"
+code_location_name = "workflow"
 
 [build-system]
 requires = ["setuptools>=42"]

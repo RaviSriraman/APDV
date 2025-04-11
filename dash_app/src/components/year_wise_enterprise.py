@@ -8,7 +8,6 @@ all_enterprises = mongo_utils.find_all_enterprises()
 
 
 def year_wise_enterprise_count():
-    all_enterprises = mongo_utils.find_all_enterprises()
     enterprises_2012 = (all_enterprises[all_enterprises["year"] == 2012].groupby(by=["country", "year"])
                         .agg({'enterprises': 'sum'})
                         .sort_values(by="enterprises").reset_index())

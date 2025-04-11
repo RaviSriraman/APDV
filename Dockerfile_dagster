@@ -21,6 +21,10 @@ COPY . $DAGSTER_HOME
 
 WORKDIR $DAGSTER_HOME
 
+RUN apt-get update
+RUN apt-get install zlib1g-dev -y
+RUN apt-get install gcc python3-dev -y
+
 RUN pip install -r requirements.txt
 
 RUN ipython kernel install --name anaconda3 --user

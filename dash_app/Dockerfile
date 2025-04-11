@@ -4,6 +4,10 @@ WORKDIR /app
 
 COPY . .
 
+RUN apt-get update
+RUN apt-get install zlib1g-dev -y
+RUN apt-get install gcc python3-dev -y
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN rm .env

@@ -19,8 +19,8 @@ def enterprises_dataset():
 enterprises_visualization_notebook = define_dagstermill_asset(
     name="enterprises_visualizations",
     notebook_path = file_relative_path(__file__, "../../notebooks/enterprises-visualizations.ipynb"),
-    group_name="enterprises",
+    group_name="workflow",
     ins={
-        "enterprises": AssetIn(key=AssetKey("enterprises_dataset"))
+        "workflow": AssetIn(key=AssetKey("enterprises_dataset"))
     }
 )

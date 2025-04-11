@@ -1,9 +1,12 @@
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 WORKDIR /opt/dagster/app
 
 COPY . /opt/dagster/app
 
+RUN apt-get update
+RUN apt-get install zlib1g-dev -y
+RUN apt-get install gcc python3-dev -y
 RUN pip install -r requirements.txt
 
 RUN ipython kernel install --name anaconda3 --user
@@ -22,4 +25,4 @@ RUN mv prod.env .env
 
 #VOLUME /opt/dagster/app/data
 
-CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-m", "enterprises.definitions"]
+CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-m", "workflow.definitions"]

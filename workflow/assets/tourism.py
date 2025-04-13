@@ -9,7 +9,8 @@ from dagster import asset, AssetExecutionContext
 from sqlalchemy import create_engine
 
 from .constants import TOURISM_RAW_FILE_PATH
-
+from .enterprise import read_http
+from .utils import remove_alphabets
 
 LOGGER_CONFIG = {"loggers": {"console": {"config": {"log_level": "INFO"}}}}
 
@@ -19,20 +20,7 @@ def get_engine():
     return create_engine(db_url)
 
 
-def remove_alphabets(value: str) -> str:
-    if isinstance(value, str):
-        result = re.findall(r'^[0-9]+', value)
-        return result[0] if result else '0'
-    return value
-
-def read_http(http_url) -> pd.DataFrame:
-    response = requests.get(http_url)
-    content = response.text
-    content = content.replace("\t", ",").replace(",:", ",0")
-    return pd.read_csv(StringIO(content), delimiter=",")
-
-
-@asset
+@asset(group_name="eu_tourism")
 def tours_file():
     df = read_http("https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tour_dem_extot?format=TSV")
     df = df.rename(columns={"geo\\TIME_PERIOD": "geo"})
@@ -45,7 +33,7 @@ def tours_file():
     df_melted.to_csv(TOURISM_RAW_FILE_PATH, index=False)
 
 
-@asset(deps=["tours_file"])
+@asset(deps=["tours_file"], group_name="eu_tourism")
 def tours() -> None:
     df = pd.read_csv(TOURISM_RAW_FILE_PATH)
     df.to_sql('tours', get_engine(), if_exists='replace', index=False)

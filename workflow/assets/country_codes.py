@@ -4,7 +4,7 @@ import pandas as pd
 from dagster import asset, AssetExecutionContext
 
 
-@asset(deps=["enterprises"], required_resource_keys={"mongo"})
+@asset(deps=["enterprises"], group_name="eu_enterprises", required_resource_keys={"mongo"})
 def country_codes(context: AssetExecutionContext):
     url = 'https://en.wikipedia.org/wiki/ISO_3166-1'
 

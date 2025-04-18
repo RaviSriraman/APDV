@@ -5,5 +5,15 @@ dagster dev
 cd dash_app
 python3 src/app.py
 
-# Running dagster and dash app as docker containers
+# Running dagster 
 docker compose up
+
+# dash app as docker containers
+Please access http://localhost:3000/jobs , click on etl_job and materialize all button
+
+Once all assets are materialized. run the following command from the same folder
+
+# dash dash board app as docker containers
+docker compose start dash_app 
+
+Please open http://localhost:8070 in your browser to access the dashboard

@@ -1,4 +1,5 @@
 ENTERPRISES_RAW_FILE_PATH = "data/raw/enterprises_raw.csv"
+EMPLOYMENTS_RAW_FILE_PATH = "data/raw/employments_raw.csv"
 
 TOP_ECONOMIC_FILE_PATH = "data/outputs/top_enterprises.png"
 
@@ -12,4 +13,5 @@ CITIES_HISTOGRAM_FILE_PATH = "data/outputs/cities_histogram.png"
 
 
 TOURISM_RAW_FILE_PATH = "data/raw/tourism_raw.csv"
+TOURISM_RAW_CSV_FILE_PATH = "data/raw/tourism_raw_new.csv"
 

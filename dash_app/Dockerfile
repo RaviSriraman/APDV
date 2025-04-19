@@ -12,6 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN rm .env
 RUN mv prod.env .env
+RUN rm src/.env
+RUN mv src/prod.env src/.env
 
 EXPOSE 8070
 

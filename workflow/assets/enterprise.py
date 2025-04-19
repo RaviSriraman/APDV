@@ -2,6 +2,7 @@ import pandas as pd
 from dagster import asset, AssetExecutionContext
 
 from .constants import ENTERPRISES_RAW_FILE_PATH
+from .sql_db_utils import get_engine
 from .utils import remove_alphabets, grouped_enterprises, read_http
 
 LOGGER_CONFIG = {"loggers": {"console": {"config": {"log_level": "INFO"}}}}
@@ -32,6 +33,12 @@ def enterprises(context: AssetExecutionContext) -> None:
 @asset(deps=["enterprises"], group_name="eu_enterprises", required_resource_keys={"mongo"})
 def enterprises_by_city(context: AssetExecutionContext):
     raw_df = pd.read_csv(ENTERPRISES_RAW_FILE_PATH)
+    raw_df = raw_df.groupby(by=["indic_ur", "city", "year"]).agg({"enterprises": "sum"}).reset_index()
+    ndf = raw_df[raw_df["enterprises"] != 0].groupby(by=["indic_ur", "city"]).agg(
+        {"enterprises": "count"}).reset_index()
+    ndf = ndf[ndf["enterprises"] > 11]
+    raw_df = raw_df.merge(ndf, on=['city', 'indic_ur'])
+    raw_df = raw_df.rename(columns={"enterprises_x": "enterprises"})
     grouped_enterprises(context, raw_df, "enterprises_by_city", ["indic_ur", "city"])
 
 
@@ -39,4 +46,8 @@ def enterprises_by_city(context: AssetExecutionContext):
 def enterprises_by_country(context: AssetExecutionContext):
     raw_df = pd.read_csv(ENTERPRISES_RAW_FILE_PATH)
     raw_df = raw_df.groupby(by=["indic_ur", "country", "year"]).agg({"enterprises": "sum"}).reset_index()
+    ndf = raw_df[raw_df["enterprises"] != 0].groupby(by=["indic_ur", "country"]).agg({"enterprises": "count"}).reset_index()
+    ndf = ndf[ndf["enterprises"] > 11]
+    raw_df = raw_df.merge(ndf, on=['country', 'indic_ur'])
+    raw_df = raw_df.rename(columns={"enterprises_x": "enterprises"})
     grouped_enterprises(context, raw_df, "enterprises_by_country", ["indic_ur", "country"])

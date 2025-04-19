@@ -39,3 +39,7 @@ def find_all_by_country_year(year):
 
 def find_all_enterprises_group_by_country():
     return enterprises_by_country_collection.find({})
+
+
+def find_all_enterprises_by_city():
+    return enterprises_by_city_collection.find({})

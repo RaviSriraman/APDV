@@ -71,34 +71,129 @@ def find_all_enterprises_by_city() -> pd.DataFrame:
 
 @cache
 def find_enterprises_by_country(country) -> pd.DataFrame:
-    return pd.DataFrame(enterprises.find_enterprises_by_country(country))
+    try:
+        return pd.DataFrame(enterprises.find_enterprises_by_country(country))
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
 
 @cache
 def find_all_enterprises_group_by_country() -> pd.DataFrame:
-    return pd.DataFrame(enterprises.find_all_enterprises_group_by_country())
+    try:
+        return pd.DataFrame(enterprises.find_all_enterprises_group_by_country())
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
 
 @cache
 def find_enterprises_by_year(year) -> pd.DataFrame:
-    return pd.DataFrame(enterprises.find_enterprises_by_year(year))
+    try:
+        return pd.DataFrame(enterprises.find_enterprises_by_year(year))
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame({})
+
 
 @cache
 def find_country_codes() -> pd.DataFrame:
-    return pd.DataFrame(country_codes.find_country_codes())
+    try:
+        return pd.DataFrame(country_codes.find_country_codes())
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
 
 @cache
 def find_enterprises_by_country_and_indic_ur(country_value, indic_ur):
-    return pd.DataFrame(enterprises.find_enterprises_by_country_and_indic_ur(country_value, indic_ur))
+    try:
+        return pd.DataFrame(enterprises.find_enterprises_by_country_and_indic_ur(country_value, indic_ur))
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
 
 @cache
 def find_all_years():
-    return pd.DataFrame(enterprises.find_all_years())["year"].unique().astype(int).tolist()
+    try:
+        return pd.DataFrame(enterprises.find_all_years())["year"].unique().astype(int).tolist()
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
 
 @cache
 def find_all_by_country_year(year):
-    df = pd.DataFrame(enterprises.find_all_by_country_year(year))
-    df = df.groupby(by=["country"]).agg({"enterprises": "sum", "c_enterprises": "sum"}).reset_index()
-    return df
+    try:
+        df = pd.DataFrame(enterprises.find_all_by_country_year(year))
+        df = df.groupby(by=["country"]).agg({"enterprises": "sum", "c_enterprises": "sum"}).reset_index()
+        return df
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
 
 @cache
 def find_enterprises_by_year_group_by_country(year) -> pd.DataFrame:
-    return pd.DataFrame(enterprises.find_enterprises_by_year_group_by_country(year))
+    try:
+        return pd.DataFrame(enterprises.find_enterprises_by_year_group_by_country(year))
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
+
+def find_employments_by_working_time(working_time: str) -> pd.DataFrame:
+    try:
+        return pd.DataFrame(employments.find_employments_by_working_time(working_time))
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
+
+def find_employments_by_work_field(work_field: str) -> pd.DataFrame:
+    try:
+        return pd.DataFrame(employments.find_employments_by_work_field(work_field))
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
+
+def find_all_employments() -> pd.DataFrame:
+    try:
+        return pd.DataFrame(employments.find_all_employments())
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
+
+def find_all_work_fields() -> list[str]:
+    try:
+        return list(pd.DataFrame(employments.find_all_work_fields())["work_field"].unique())
+    except :
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return []
+
+def find_all_working_times() -> list[str]:
+    try:
+        return list(pd.DataFrame(employments.find_all_working_times())["working_time"].unique())
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return []
+
+
+def find_employments_by_year(year) -> pd.DataFrame:
+    try:
+        return pd.DataFrame(employments.find_employments_by_year(year))
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return pd.DataFrame([{}])
+
+
+def find_all_years_from_employments() -> list[int]:
+    try:
+        return list(pd.DataFrame(employments.find_all_years())["year"].astype(int).unique())
+    except:
+        get_dagster_logger().debug("could not query data from mongoDB")
+        return []
+

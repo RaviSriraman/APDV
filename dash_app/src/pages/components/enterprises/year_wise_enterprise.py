@@ -2,10 +2,11 @@ from dash import html, dcc
 import plotly.express as px
 import pandas as pd
 
-from utils import mongo_utils
+from utils import mongo_utils, sql_db_utils
 from utils.constants import PLOT_STYLE
 
 years = mongo_utils.find_all_years()
+country_codes = sql_db_utils.find_city_codes()
 
 def enterprises_by_year_country():
     return html.Div(
@@ -27,6 +28,7 @@ def year_enterprise_country_line_component():
         dcc.Graph(
             id='line-enterprises-year-country-graph',
             figure=px.line(enterprises_df, x="year",
+                           title="Trend in Number of Companies in 4 European Countries",
                                  y="c_enterprises",
                                  color="country")
         )
@@ -39,13 +41,14 @@ def enterprises_by_year_country_map_component(year=years[0]):
     country_codes: pd.DataFrame = mongo_utils.find_country_codes().rename(columns={"two_letter_code": "country"})
     new_df = pd.merge(enterprises, country_codes, on=["country"])
     return [
-        dcc.Dropdown(years, year, id='map-year-selection-id'),
+        dcc.Dropdown(years, year, id='map-year-selection-id', clearable=False),
         dcc.Graph(
             id='map-enterprises-by-year-graph',
             figure=px.choropleth(new_df, locations="three_letter_code",
                                  color="c_enterprises",
                                  hover_name="full_name",
                                  scope="europe",
+                                 title="Distribution of Companies across The European Countries",
                                  color_continuous_scale=px.colors.sequential.Plasma)
         )
     ]

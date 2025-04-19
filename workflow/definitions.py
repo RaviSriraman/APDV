@@ -7,7 +7,9 @@ from .schedules import enterprises_etl_job_schedule
 from .jobs import enterprises_etl_job
 
 enterprise_assets = load_assets_from_modules([enterprise])
+employment_assets = load_assets_from_modules([employment])
 country_codes_assets = load_assets_from_modules([country_codes])
+city_codes_assets = load_assets_from_modules([city_codes])
 enterprises_visualizations_assets = load_assets_from_modules([enterprises_visualizations])
 tourism_assets = load_assets_from_modules([tourism])
 tourism_enterprises_assets = load_assets_from_modules([tourism_enterprises])

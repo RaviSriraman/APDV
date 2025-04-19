@@ -33,6 +33,6 @@ COPY ./dagster-prod.yaml $DAGSTER_HOME/dagster.yaml
 
 COPY ./workspace-prod.yaml $DAGSTER_HOME/workspace.yaml
 
-RUN sed -i  "s|\${HOME_DIR}|$HOST_DIR|g" dagster.yaml
+#RUN sed -i  "s|\${HOME_DIR}|$HOST_DIR|g" dagster.yaml
 
 VOLUME /opt/dagster/dagster_home/data

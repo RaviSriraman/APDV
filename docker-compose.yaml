@@ -61,10 +61,10 @@ services:
       DAGSTER_POSTGRES_PASSWORD: "postgres_password"
       DAGSTER_POSTGRES_DB: "postgres_db"
       DAGSTER_CURRENT_IMAGE: "workflow_code_image"
-    volumes:
-      - ${HOME_DIR}/data:/opt/dagster/app/data
-      - ${HOME_DIR}/notebooks:/opt/dagster/app/notebooks
-      - ${HOME_DIR}/notebooks/output:/opt/dagster/app/notebooks/output
+#    volumes:
+#      - ${HOME_DIR}/data:/opt/dagster/app/data
+#      - ${HOME_DIR}/notebooks:/opt/dagster/app/notebooks
+#      - ${HOME_DIR}/notebooks/output:/opt/dagster/app/notebooks/output
     restart: always
     networks:
       - dagster_network
@@ -96,9 +96,9 @@ services:
     volumes: # Make docker client accessible so we can terminate containers from the webserver
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
-      - ${HOME_DIR}/data:/opt/dagster/dagster_home/data
-      - ${HOME_DIR}/notebooks:/opt/dagster/dagster_home/notebooks
-      - ${HOME_DIR}/notebooks/output:/opt/dagster/dagster_home/notebooks/output
+#      - ${HOME_DIR}/data:/opt/dagster/dagster_home/data
+#      - ${HOME_DIR}/notebooks:/opt/dagster/dagster_home/notebooks
+#      - ${HOME_DIR}/notebooks/output:/opt/dagster/dagster_home/notebooks/output
     networks:
       - dagster_network
     depends_on:
@@ -109,9 +109,9 @@ services:
 
 
   dagster_daemon:
-    build:
-      args:
-        HOST_DIR: $PWD
+#    build:
+#      args:
+#        HOST_DIR: $PWD
       context: .
       dockerfile: ./Dockerfile_dagster
     entrypoint:
@@ -126,9 +126,9 @@ services:
     volumes: # Make docker client accessible so we can launch containers using host docker
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
-      - ${HOME_DIR}/data:/opt/dagster/dagster_home/data
-      - ${HOME_DIR}/notebooks:/opt/dagster/dagster_home/notebooks
-      - ${HOME_DIR}/notebooks/output:/opt/dagster/dagster_home/notebooks/output
+#      - ${HOME_DIR}/data:/opt/dagster/dagster_home/data
+#      - ${HOME_DIR}/notebooks:/opt/dagster/dagster_home/notebooks
+#      - ${HOME_DIR}/notebooks/output:/opt/dagster/dagster_home/notebooks/output
     networks:
       - dagster_network
     depends_on:

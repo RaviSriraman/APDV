@@ -64,3 +64,24 @@ def country_spent_enterprises_year_line():
         id="line-combined-country-spent-enterprises_year-id",
         children=country_spent_enterprises_year_line_component(), style=PLOT_STYLE)
 
+
+def country_spent_enterprises_year_bar():
+    return html.Div(
+        id="bar-combined-country-spent-enterprises_year-id",
+        children=country_spent_enterprises_year_bar_component(), style=PLOT_STYLE)
+
+def country_spent_enterprises_year_bar_component(year=get_first_or_empty(years)):
+    tours_enterprises = fetch_domestic_tours_by_country_all_purpose_enterprises(year)
+
+    tours_enterprises = tours_enterprises[tours_enterprises["indic_ur"] == "EC2021V"]
+    return [
+        dcc.Dropdown(years, year, id='bar-combined-country-spent-year-input', clearable=False),
+        dcc.Graph(
+            id='bar-combined-country-spent-year-graph',
+            figure=plotly_dual_axis_bar(tours_enterprises[["country", "c_enterprises"]],
+                                        tours_enterprises[["country", "amount"]],
+                                        "country", f"Number of Companies and Money Spent on Tourism in Europe", "c_enterprises", "amount")
+        )
+    ]
+
+

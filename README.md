@@ -9,7 +9,7 @@ python3 src/app.py
 docker compose up
 
 # dash app as docker containers
-Please access http://localhost:3000/jobs , click on etl_job and materialize all button
+Please access http://127.0.0.1:3000/locations/workflow/jobs/apdv_etl_job , click on Materialize all button
 
 Once all assets are materialized. run the following command from the same folder
 

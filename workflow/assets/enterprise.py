@@ -2,7 +2,6 @@ import pandas as pd
 from dagster import asset, AssetExecutionContext
 
 from .constants import ENTERPRISES_RAW_FILE_PATH
-from .sql_db_utils import get_engine
 from .utils import remove_alphabets, grouped_enterprises, read_http
 
 LOGGER_CONFIG = {"loggers": {"console": {"config": {"log_level": "INFO"}}}}

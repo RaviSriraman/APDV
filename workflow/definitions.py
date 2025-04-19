@@ -4,7 +4,7 @@ from dagstermill import ConfigurableLocalOutputNotebookIOManager
 from .assets import enterprise, enterprises_visualizations, country_codes, tourism, city_codes, tourism_enterprises, employment
 from .resources import mongo_resource
 from .schedules import enterprises_etl_job_schedule
-from .jobs import enterprises_etl_job
+from .jobs import apdv_etl_job
 
 enterprise_assets = load_assets_from_modules([enterprise])
 employment_assets = load_assets_from_modules([employment])
@@ -17,6 +17,6 @@ tourism_enterprises_assets = load_assets_from_modules([tourism_enterprises])
 defs = Definitions(
     assets=[*enterprise_assets, *employment_assets, *enterprises_visualizations_assets, *country_codes_assets, *tourism_assets, *city_codes_assets, *tourism_enterprises_assets],
     resources={"mongo": mongo_resource, "output_notebook_io_manager": ConfigurableLocalOutputNotebookIOManager(base_dir=file_relative_path(__file__, "../notebooks/output"))},
-    jobs=[enterprises_etl_job],
+    jobs=[apdv_etl_job],
     schedules=[enterprises_etl_job_schedule]
 )

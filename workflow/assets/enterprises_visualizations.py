@@ -17,7 +17,7 @@ def find_enterprises(context):
     df = pd.DataFrame(enterprise)
     return df
 
-@asset(group_name="enterprises_visualizations")
+# @asset(group_name="enterprises_visualizations")
 def enterprises_dataset():
     sk_iris = datasets.load_iris()
     return pd.DataFrame(
@@ -26,7 +26,7 @@ def enterprises_dataset():
     )
 
 
-@asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
+# @asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
 def countries_with_most_enterprises(context: AssetExecutionContext) -> None:
     apdv_enterprises_collection = context.resources.mongo["enterprises"]
     enterprise = apdv_enterprises_collection.find()
@@ -39,7 +39,7 @@ def countries_with_most_enterprises(context: AssetExecutionContext) -> None:
     plt.close(fig)
 
 
-@asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
+# @asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
 def countries_with_least_enterprises(context: AssetExecutionContext) -> None:
     df = find_enterprises(context)
     fig, ax = plt.subplots(figsize=(10, 10))
@@ -51,7 +51,7 @@ def countries_with_least_enterprises(context: AssetExecutionContext) -> None:
     plt.savefig(constants.COUNTRIES_WITH_LEAST_ENTERPRISES_FILE_PATH, format="png", bbox_inches="tight")
     plt.close(fig)
 
-@asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
+# @asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
 def cities_with_most_enterprises(context: AssetExecutionContext) -> None:
     df = find_enterprises(context)
     fig, ax = plt.subplots(figsize=(10, 10))
@@ -63,7 +63,7 @@ def cities_with_most_enterprises(context: AssetExecutionContext) -> None:
     plt.savefig(constants.CITIES_WITH_MOST_ENTERPRISES_FILE_PATH, format="png", bbox_inches="tight")
     plt.close(fig)
 
-@asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
+# @asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
 def cities_with_least_enterprises(context: AssetExecutionContext) -> None:
     df = find_enterprises(context)
     fig, ax = plt.subplots(figsize=(10, 10))
@@ -75,7 +75,7 @@ def cities_with_least_enterprises(context: AssetExecutionContext) -> None:
     plt.savefig(constants.CITIES_WITH_LEAST_ENTERPRISES_FILE_PATH, format="png", bbox_inches="tight")
     plt.close(fig)
 
-@asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
+# @asset(deps=["enterprises"], group_name="enterprises_visualizations", required_resource_keys={"mongo"})
 def cities_distribution(context: AssetExecutionContext) -> None:
     df = find_enterprises(context)
     fig, ax = plt.subplots(figsize=(10, 10))
@@ -83,11 +83,11 @@ def cities_distribution(context: AssetExecutionContext) -> None:
     plt.savefig(constants.CITIES_HISTOGRAM_FILE_PATH, format="png", bbox_inches="tight")
     plt.close(fig)
 
-enterprises_visualization_notebook = define_dagstermill_asset(
-    name="enterprises_visualizations",
-    notebook_path = file_relative_path(__file__, "../../notebooks/enterprises-visualizations.ipynb"),
-    group_name="enterprises_visualizations",
-    ins={
-        "workflow": AssetIn(key=AssetKey("enterprises_dataset"))
-    }
-)
+# enterprises_visualization_notebook = define_dagstermill_asset(
+#     name="enterprises_visualizations",
+#     notebook_path = file_relative_path(__file__, "../../notebooks/enterprises-visualizations.ipynb"),
+#     group_name="enterprises_visualizations",
+#     ins={
+#         "workflow": AssetIn(key=AssetKey("enterprises_dataset"))
+#     }
+# )

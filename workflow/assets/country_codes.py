@@ -11,8 +11,7 @@ def country_codes(context: AssetExecutionContext):
     response = requests.get(url)
     parsed_data = BeautifulSoup(response.content, "html.parser")
 
-
-    table = parsed_data.find_all('table')[2] # the 12 table
+    table = parsed_data.find_all('table')[2]
     full_name, two_letter_code, three_letter_code = ([], [], [])
     for row in table.find_all('tr'):
         if not row.find_all('th'):

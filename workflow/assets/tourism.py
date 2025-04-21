@@ -58,14 +58,9 @@ def tours_data(context: AssetExecutionContext):
     employments_collection.insert_many(tours)
 
 
-@asset(deps=["tours_csv_file"], group_name="eu_tourism", required_resource_keys={"mongo"})
-def domestic_tours_by_country_all_purpose(context: AssetExecutionContext) -> None:
+@asset(deps=["tours_csv_file", "country_codes"], group_name="eu_tourism")
+def domestic_tours_by_country_all_purpose() -> None:
     df = pd.read_csv(TOURISM_RAW_CSV_FILE_PATH)
-    country_codes_df = pd.DataFrame(context.resources.mongo["country_codes"].find({}).to_list())
-    # df = df[df["c_dest"] == "DOM"]
-    # df = df[df["purpose"] == "PER"]
-    # country_codes_df = country_codes_df.rename(columns={"full_name": "country_full_name", "two_letter_code": "country"})
-    # combined_df = pd.merge(df, country_codes_df, how="left", on=["country"])
     combined_df = df.groupby(by=["country", "year", "country_name"]).agg({"amount": "sum"}).reset_index()
     combined_df.to_sql('domestic_tours_by_country_all_purpose', get_engine(), if_exists='replace', index=False)
 
